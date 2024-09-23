@@ -3,6 +3,9 @@ body{
     color: rgb(32, 31, 30);
     text-align: center;
 }
+.timer{
+  left: 150px;
+}
 .board-container {
     margin: 0 auto;
     border-collapse: collapse;

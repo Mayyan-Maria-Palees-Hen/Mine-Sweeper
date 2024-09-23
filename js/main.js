@@ -1,5 +1,5 @@
-'use strict'
-const MINE = '💣'
+var MINE = '💣'
+const FLAG = '🚩'
 var gBoard
 
 // This is an object in which you can keep and update the current game state:
@@ -17,8 +17,13 @@ var gLevel = { SIZE: 4, MINES: 2, }
 
 // This is called when page loads
 function onInit() {
+    clearInterval(gTimerInterval)
+    var elTimer = document.querySelector('.timer')
+    elTimer.innerText = INITIAL_TIMER_TEXT
+    
     gBoard = buildBoard(gLevel.SIZE)
-    console.table(gBoard)
+    renderMines(gBoard, gLevel.MINES)
+    // console.table(gBoard)
     setMinesNegsCount(gBoard)
     renderBoard(gBoard)
 }
@@ -42,23 +47,28 @@ function buildBoard(size) {
                 isMarked: false,
 
             }
-            if (i === 1 && j === 1 || i === 2 && j === 2) {
-                board[i][j].isMine = true
+            // if (i === 1 && j === 1 || i === 2 && j === 2) {
+            //     board[i][j].isMine = true
 
-            }
+            // }
         }
     }
     return board
 }
 
 function renderBoard(board) {
-    console.table(board)
+    // console.table(board)
+    // var board = Math.sqrt(gLevel.SIZE)
     var strHTML = ''
     for (var i = 0; i < board.length; i++) {
         strHTML += '\n<tr>'
         for (var j = 0; j < board[i].length; j++) {
             const classCell = board[i][j]
             var className = ''
+            if (classCell.isMarked) {
+                className = FLAG
+            }
+            
             if (classCell.isShown) {
 
                 if (classCell.isMine) {
@@ -70,7 +80,8 @@ function renderBoard(board) {
                 }
             }
             strHTML +=
-                `\n\t<td onclick="onCellClicked(${i},${j})" >${className}</td>`
+                `\n\t<td onclick="onCellClicked(${i},${j})"
+                 oncontextmenu="onCellMarked(event, ${i},${j})">${className}</td>`
         }
         strHTML += '\n</tr>'
     }
@@ -86,7 +97,7 @@ function setMinesNegsCount(board) {
             }
         }
     }
-    console.log(board)
+    // console.log(board)
 }
 
 function countNeighbors(board, row, col) {
@@ -108,11 +119,49 @@ function countNeighbors(board, row, col) {
 
 function onCellClicked(i, j) {
     var cell = gBoard[i][j]
-// if the cell isshown
-    if (cell.isShown) return
-    //if not show
-    cell.isShown = true
+
+    if (cell.isShown) return // if the cell is shown-->hide
+    cell.isShown = true //if not shown-->show
     gGame.shownCount++
-// after the board is chanched need to rerender
+    // after the board is chanched need to rerender
+    if (cell.isMine) gameOver()
     renderBoard(gBoard)
 }
+
+function onCellMarked(event, i, j) {
+    event.preventDefault()//prevent the default behavior of rigth click
+    var elCell = gBoard[i][j]
+    if (elCell.isShown) return
+    elCell.isMarked = !elCell.isMarked//if you flag turn to not flag
+    if (elCell.isMarked) {
+        gGame.markedCount++
+    } else {
+        gGame.markedCount--
+    }
+    renderBoard(gBoard)
+}
+
+
+function renderMines(board, numOfMines) {
+    var countOfMines = 0
+    while (countOfMines < numOfMines) {
+
+        var i = getRandomInt(0, board.length)
+        var j = getRandomInt(0, board[0].length)
+        if (board[i][j].isMine) continue //if there is mine continue
+        board[i][j].isMine = true
+        countOfMines++
+    }
+
+
+}
+function gameOver() {
+    console.log('game over!')
+}
+
+
+function onChangeDifficulty(size, mines) {
+    gLevel.SIZE = size
+    gLevel.MINES = mines
+    onInit()
+  }

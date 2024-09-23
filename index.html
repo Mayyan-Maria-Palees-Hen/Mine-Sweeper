@@ -11,17 +11,31 @@
 
 <body onload="onInit()">
     <h1>💣Mine Sweeper💣</h1>
-
+    <div>
+        <span>Time: <span class="timer"></span>00:00</span>
+        <span>Mines Left: <span class="mines-left"></span></span> 
+       
+    </div>
     <table class="board-container">
         <tbody class="board"></tbody>
     </table>
 
+<div class="difficulty-container">
+    <h2>Difficulty:</h2>
+    <div class="levels">
+        <button onclick="onChangeDifficulty(4,2)">Beginner</button>
+        <button onclick="onChangeDifficulty(8,12)">Medium</button>
+        <button onclick="onChangeDifficulty(12,32)">Expert</button>
+    </div>
+</div>
 
 
 
 
 
     <script src="js/main.js"></script>
+    <script src="utils/utils.js"></script>
+    <script src="timer/timer.js"></script>
 </body>
 
 </html>
