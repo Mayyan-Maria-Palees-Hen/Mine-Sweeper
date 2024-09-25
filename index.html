@@ -12,22 +12,33 @@
 <body onload="onInit()">
     <h1>💣Mine Sweeper💣</h1>
     <div>
-        <span>Time: <span class="timer"></span>00:00</span>
-        <span>Mines Left: <span class="mines-left"></span></span> 
-       
+
+        <span>Hint: <span class="hint-left"></span></span>
+        <br />
+        <span> <span class="life-left"></span></span>
+        <br />
+        <span>Time: <span class="timer"></span></span>
+        <br />
+        <span><span class="mines-left"></span></span>
+
+        <div class="smily" onclick="onInit()" style="cursor: pointer;">😀</div>
+
     </div>
     <table class="board-container">
         <tbody class="board"></tbody>
     </table>
-
-<div class="difficulty-container">
-    <h2>Difficulty:</h2>
-    <div class="levels">
-        <button onclick="onChangeDifficulty(4,2)">Beginner</button>
-        <button onclick="onChangeDifficulty(8,12)">Medium</button>
-        <button onclick="onChangeDifficulty(12,32)">Expert</button>
+    <div>
+        
     </div>
-</div>
+
+    <div class="difficulty-container">
+        <h2>Difficulty:</h2>
+        <div class="levels">
+            <button onclick="onChangeDifficulty(4,2)">Beginner</button>
+            <button onclick="onChangeDifficulty(8,12)">Medium</button>
+            <button onclick="onChangeDifficulty(12,32)">Expert</button>
+        </div>
+    </div>
 
 
 

@@ -3,6 +3,7 @@ body{
     color: rgb(32, 31, 30);
     text-align: center;
 }
+
 .timer{
   left: 150px;
 }
@@ -10,6 +11,7 @@ body{
     margin: 0 auto;
     border-collapse: collapse;
   }
+
   
   td {
     width: 40px;
@@ -21,3 +23,9 @@ body{
     vertical-align: middle;
     font-size: 24px;
   }
+
+  td.revealed{
+    background-color: rgb(172, 46, 151);
+  }
+
+  

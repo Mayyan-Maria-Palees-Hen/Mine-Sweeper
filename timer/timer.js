@@ -28,7 +28,7 @@ function formatTime(ms) {
     var minutes = Math.floor(ms / 60000);
     var seconds = Math.floor((ms % 60000) / 1000);
     
-    return `${padTime(minutes)}:${padTime(seconds)}}`
+    return `${padTime(minutes)}:${padTime(seconds)}`
 }
 
 function padTime(val) {
