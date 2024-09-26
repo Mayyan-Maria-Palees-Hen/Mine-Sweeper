@@ -7,29 +7,37 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Mine Sweeper</title>
 
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Protest+Guerrilla& display=swap" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
 </head>
+
 
 <body onload="onInit()">
     <h1>💣Mine Sweeper💣</h1>
     <div>
 
-        <span>Hint: <span class="hint-left"></span></span>
-        <br />
-        <span> <span class="life-left"></span></span>
-        <br />
-        <span>Time: <span class="timer"></span></span>
-        <br />
-        <span><span class="mines-left"></span></span>
+        <p><span><span class="hint-left"></span></span></p>
+        
+        <p><span> <span class="life-left"></span></span></p>
+        
+       <p><span>Time: <span class="timer"></span></span></p> 
+        
+       <p><span><span class="mines-left"></span></span></p> 
 
-        <div class="smily" onclick="onInit()" style="cursor: pointer;">😀</div>
-
+        <div class="smily" onclick="onInit()" style="cursor: pointer;"><i class="fa-solid fa-face-smile" style="color: #ee05ff;"></i></div>
+    </div>
+    <div>
+        <p class="game-done"></p>
     </div>
     <table class="board-container">
         <tbody class="board"></tbody>
     </table>
-    <div>
-        
-    </div>
+    
 
     <div class="difficulty-container">
         <h2>Difficulty:</h2>

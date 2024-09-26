@@ -1,10 +1,10 @@
 var MINE = '💣'
 const FLAG = '🚩'
-const LIFE = '❤'
+const LIFE = '<i class="fa-solid fa-heart" style="color: #fb00ff;"></i>'
 const HINT = '💡'
-const NORMAL = '😀'
-const WIN = '🤩'
-const LOSE = '😥'
+const NORMAL = '<i class="fa-solid fa-face-smile fa-2xl" style="color: #ee05ff;"></i>'
+const WIN = '<i class="fa-solid fa-face-laugh-beam fa-2xl" style="color: #d0d6e2;"></i>'
+const LOSE = '<i class="fa-solid fa-poo fa-2xl" style="color: #c6c0de;"></i>'
 var gBoard
 
 // This is an object in which you can keep and update the current game state:
@@ -17,6 +17,8 @@ var gGame = {
     minesLeft: 0,
     secsPassed: 0, // How many seconds passed 
     lifeCount: 3,
+    hintCount: 3,
+    isHintActive: false,
 }
 
 //This is an object by which the board size is set
@@ -32,11 +34,17 @@ function onInit() {
     gGame.lifeCount = 3
     gBoard = buildBoard(gLevel.SIZE)
     gGame.minesLeft = gLevel.MINES
+    gGame.markedCount = 0
+    gGame.shownCount = 0
+    gGame.hintCount = 3
+    gGame.isHintActive = false
     // console.table(gBoard)
     renderMinesLeft()
     renderSmily(NORMAL)
     renderBoard(gBoard)
     renderLife()
+    renderHint()
+    document.querySelector(".game-done").innerHTML = ''
 }
 
 // Builds the board ✔
@@ -57,10 +65,6 @@ function buildBoard(size) {
                 isMine: false,
                 isMarked: false,
             }
-            // if (i === 1 && j === 1 || i === 2 && j === 2) {
-            //     board[i][j].isMine = true
-
-            // }
         }
     }
     return board
@@ -79,7 +83,6 @@ function renderBoard(board) {
             if (classCell.isMarked) {
                 className = FLAG
             }
-
             if (classCell.isShown) {
 
                 if (classCell.isMine) {
@@ -121,6 +124,7 @@ function countNeighbors(board, row, col) {
         for (var j = col - 1; j <= col + 1; j++) {
             if (i === row && j === col) continue
             if (j < 0 || j >= board[0].length) continue
+
             var currCell = board[i][j]
             if (currCell.isMine) neighborCount++
         }
@@ -134,6 +138,11 @@ function onCellClicked(i, j) {
     var cell = gBoard[i][j]
 
     if (cell.isShown) return // if the cell is shown-->hide
+    if (gGame.isHintActive) {
+        revealCellsForHint(i, j)
+        gGame.isHintActive = false
+        return
+    }
     if (gGame.isFirstClick) {//if first click put mines and count naibors
         startTimer()
         renderMines(gBoard, gLevel.MINES, i, j)
@@ -144,34 +153,35 @@ function onCellClicked(i, j) {
     gGame.shownCount++
     // after the board is chanched need to rerender
     if (cell.isMine) {
+        gGame.minesLeft--
         gGame.lifeCount--
         renderLife()
+        renderMinesLeft()
         if (gGame.lifeCount === 0) {
             revealedMines()
             gameOver(false)//lose
         }
     } else if (gBoard[i][j].minesAroundCount === 0) {
         expandShown(gBoard, i, j)
-
     }
     renderBoard(gBoard)
     checkGameOver()
-
 }
 
 function onCellMarked(event, i, j) {
 
     event.preventDefault()//prevent the default behavior of rigth click
-    if (!gGame.isOn ) return
+    if (!gGame.isOn) return
     var elCell = gBoard[i][j]
     if (elCell.isShown) return
+    // if (!elCell.isMarked && gGame.minesLeft === 0) return//if not flag and mines=0 return
     elCell.isMarked = !elCell.isMarked//if you flag turn to not flag
     if (elCell.isMarked) {
         gGame.markedCount++
-        gGame.minesLeft--//decrising the mineds when flag marked
-    } else{
+        // gGame.minesLeft--//decrising the mineds when flag marked
+    } else {
         gGame.markedCount--
-        gGame.minesLeft++//if not flag rasing the mines count
+        // gGame.minesLeft++//if not flag rasing the mines count
     }
     renderMinesLeft()
     renderBoard(gBoard)
@@ -241,19 +251,17 @@ function checkGameOver() {
     }
 }
 
-
 function gameOver(isWin) {
     gGame.isOn = false
 
     if (!isWin) {
-        // revealedMines()
         renderSmily(LOSE)
-
-        console.log('game over!')
+        document.querySelector(".game-done").innerHTML = `You Lose!`
+        // console.log('game over!')
     } else {
         renderSmily(WIN)
-      
-        console.log('you win!')
+        document.querySelector(".game-done").innerHTML = `You Win!`
+        // console.log('you win!')
     }
     clearInterval(gTimerInterval)
 }
@@ -265,18 +273,67 @@ function onChangeDifficulty(size, mines) {
     gGame.minesLeft = mines
     onInit()
     // document.querySelector(".mines-left").innerText = `${gLevel.MINES}`
-    document.querySelector(".mines-left").innerText = `${gLevel.MINES}`
+    document.querySelector(".mines-left").innerText = `Mines Left: ${gLevel.MINES}`
     clearInterval(gTimerInterval)
 }
 
 function renderLife() {
     const elLife = document.querySelector('.life-left')
-    var hearts = "❤".repeat(gGame.lifeCount)
+    var hearts = `<i class="fa-solid fa-heart" style="color: #fb00ff;"></i>`.repeat(gGame.lifeCount)
     elLife.innerHTML = `Lives:${hearts}`
 }
 
 function renderSmily(smily) {
     const elSmily = document.querySelector('.smily')
     elSmily.innerHTML = smily
+    clearInterval(gTimerInterval)
 }
+
+function renderHint() {
+
+    const elHintsLeft = document.querySelector('.hint-left');
+    var hintsHTML = ''
+
+    // Loop through the remaining hints and create clickable hint emojis
+    for (var i = 0; i < gGame.hintCount; i++) {
+        hintsHTML += `<span class="hint" onclick="activateHint(${i})">${HINT}</span>`
+    }
+    elHintsLeft.innerHTML = `Hints:${hintsHTML}`
+}
+
+function activateHint() {
+    if (!gGame.isOn || gGame.hintCount === 0 || gGame.isFirstClick) return//if no hint left and the game is of return
+    gGame.hintCount--
+    gGame.isHintActive = true
+    renderHint()
+}
+
+function revealCellsForHint(row, col) {
+    var cellsToReveal = []
+
+    for (var i = row - 1; i <= row + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue
+
+        for (var j = col - 1; j <= col + 1; j++) {
+
+            if (j < 0 || j >= gBoard[0].length) continue
+            var currCell = gBoard[i][j]
+            if (!currCell.isShown) {//if not showen-->show && push to array[]
+                currCell.isShown = true
+                cellsToReveal.push({ row: i, col: j })
+            }
+        }
+    }
+
+    renderBoard(gBoard)//show the hint for 1 sec
+    setTimeout(function () {
+        for (var i = 0; i < cellsToReveal.length; i++) {
+            var currCell = cellsToReveal[i]
+            // console.log(currCell)
+            gBoard[currCell.row][currCell.col].isShown = false
+        }
+        renderBoard(gBoard)
+    }, 1000);
+}
+
 

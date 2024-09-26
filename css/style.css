@@ -1,31 +1,77 @@
-body{
-    background-color: aqua;
-    color: rgb(32, 31, 30);
+
+  body{
+    background-image: url(../css/img.123.jpg);
+    color: #fff;
     text-align: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1{
+  font-size: 50px;
+  text-shadow: 4px 4px 6px #320837;
+}
+p{
+  margin: 10px;
+}
+
+span{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
 }
 
 .timer{
   left: 150px;
 }
+
 .board-container {
     margin: 0 auto;
     border-collapse: collapse;
   }
 
-  
   td {
     width: 40px;
     height: 40px;
     background-color: lightgray;
-    border: 1px solid black;
+    box-shadow: 4px 4px 15px #162659;
+    
     cursor: pointer;
     text-align: center;
     vertical-align: middle;
-    font-size: 24px;
+    font-size:24px;
   }
 
   td.revealed{
     background-color: rgb(172, 46, 151);
   }
 
+  h2{
+    text-shadow: 4px 4px 6px #36063b;
+  }
+
+  .hint {
+    cursor: pointer;
+    font-size: 24px; /* Adjust size to your preference */
+    margin-right: 5px;
+}
+
+.hint:hover {
+    transform: scale(1.2); /* Slightly enlarge the emoji when hovered */
+}
+
+  .levels button{
+    width: 90px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 4px 4px 8px #ff42dfe0;
+    color: rgb(255, 0, 234);
+    background-color: #000;
+  }
   
+  .levels button:hover{
+    background-color: rgb(255, 0, 234);
+    color:#162659;
+  }
